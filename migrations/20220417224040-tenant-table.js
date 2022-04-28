@@ -91,7 +91,7 @@ module.exports = {
       },
       meta: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(500)
       },
       created_at: {
         allowNull: false,
