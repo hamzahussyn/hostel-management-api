@@ -1,11 +1,12 @@
 const models = require('../../models');
 const { Op, where, fn, literal, col } = require('sequelize');
 const { TENANT_STATUS } = require('../../constants/tenant');
+require('dotenv').config();
 
 const listingRepository = request => {
   let like = new Object();
   let whereParam = new Object();
-  const PAGE = ((request.query.page || 1) - 1) * 2;
+  const PAGE = ((request.query.page || 1) - 1) * process.env.PAGE_SIZE;
 
   if (request.query.column && request.query.search) {
     like[request.query.column] = { [Op.like]: '%' + request.query.search + '%' };
@@ -38,10 +39,11 @@ const listingRepository = request => {
       'residing',
       'last_rent_slip',
       'last_rent_paid',
+      'meta'
     ],
     order: [['created_at', 'DESC']],
     offset: PAGE,
-    limit: 2,
+    limit: process.env.PAGE_SIZE,
   });
 };
 

@@ -1,6 +1,6 @@
 const { checkSchema } = require('express-validator');
 const { formData, DocumentTypes } = require('../../utils/multer');
-const { getTenantListingSchema, addNewTenantSchema } = require('../dtos/tenants.dtos');
+const { getTenantListingSchema, addNewTenantSchema, updateTenantSchema } = require('../dtos/tenants.dtos');
 const {
   getTenantListing,
   addNewTenant,
@@ -14,13 +14,15 @@ const router = require('express').Router();
 router.get('/', [checkSchema(getTenantListingSchema)], getTenantListing);
 router.get('/:id', getTenantById);
 router.post('/create', [checkSchema(addNewTenantSchema)], addNewTenant);
-router.patch('/update', updateTenant);
+router.patch('/:id/update', [checkSchema(updateTenantSchema)],updateTenant);
+router.delete('/:id/delete');
 router.post(
-  '/media',
+  '/media-upload',
   [
     formData('images', DocumentTypes.IMAGES).fields([
+      { name: 'tenant', maxCount: 1 },
       { name: 'nic', maxCount: 1 },
-      { name: 'second', maxCount: 1 },
+      { name: 'guardian_nic', maxCount: 1 },
     ]),
   ],
   uploadMedia,

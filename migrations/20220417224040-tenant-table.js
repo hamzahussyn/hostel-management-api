@@ -65,6 +65,18 @@ module.exports = {
         default: 0,
         type: Sequelize.INTEGER
       },
+      tenant_image_file:{
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      cnic_image_file:{
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      guardian_cnic_image_file:{
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       tenant_image: {
         allowNull: true,
         type: Sequelize.BLOB('long')
