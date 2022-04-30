@@ -6,7 +6,7 @@ require('dotenv').config();
 const listingRepository = request => {
   let like = new Object();
   let whereParam = new Object();
-  const PAGE = ((request.query.page || 1) - 1) * process.env.PAGE_SIZE;
+  const PAGE = ((request.query.page || 1) - 1) * parseInt(process.env.PAGE_SIZE);
 
   if (request.query.column && request.query.search) {
     like[request.query.column] = { [Op.like]: '%' + request.query.search + '%' };
@@ -43,7 +43,7 @@ const listingRepository = request => {
     ],
     order: [['created_at', 'DESC']],
     offset: PAGE,
-    limit: process.env.PAGE_SIZE,
+    limit: parseInt(process.env.PAGE_SIZE),
   });
 };
 

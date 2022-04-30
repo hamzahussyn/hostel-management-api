@@ -142,8 +142,65 @@ const updateTenantSchema = {
   }
 };
 
+const uploadMediaSchema = {
+  id: {
+    in: ["params"],
+    errorMessage: "Id in params is required.",
+    customSanitizer: {
+      options: (value) => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+}
+
+const getByIdSchema = {
+  id: {
+    in: ["params"],
+    errorMessage: "Id in params is required.",
+    customSanitizer: {
+      options: (value) => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+}
+
+const deleteByIdSchema = {
+  id: {
+    in: ["params"],
+    errorMessage: "Id in params is required.",
+    customSanitizer: {
+      options: (value) => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+}
+
 module.exports = {
   getTenantListingSchema,
   addNewTenantSchema,
-  updateTenantSchema
+  updateTenantSchema,
+  uploadMediaSchema,
+  getByIdSchema,
+  deleteByIdSchema
 };
