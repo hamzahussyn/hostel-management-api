@@ -2,7 +2,7 @@ const { StatusCodes } = require('http-status-codes');
 const models = require('../../models');
 const fs = require('fs');
 const { validatePayload, ErrorHandler } = require('../../helpers/errorHandler');
-const { listingRepository } = require('../repositories/tenant.repository');
+const { tenantlistingRepository, getTenantByIdRepository } = require('../repositories/tenant.repository');
 const { convertToBase64, compressImage } = require('../../helpers/imageProcessing');
 const { removeFile } = require('../../utils/filesystem');
 
@@ -10,7 +10,7 @@ const getTenantListing = async (request, response, next) => {
   try {
     validatePayload(request);
 
-    let Tenants = await listingRepository(request);
+    let Tenants = await tenantlistingRepository(request);
 
     response.status(StatusCodes.OK).json({ data: Tenants, message: 'tenant listing', loading: false });
   } catch (error) {
@@ -18,8 +18,17 @@ const getTenantListing = async (request, response, next) => {
   }
 };
 
-const getTenantById = (request, response, next) => {
+const getTenantById = async (request, response, next) => {
   try {
+    validatePayload(request);
+
+    if(request.params.id === 0) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, "Malformed id in params.");
+    }
+
+    let Tenant = await getTenantByIdRepository(request.params.id);
+
+    response.status(StatusCodes.OK).json({message: "tenant by id", data: Tenant, loading: false});
   } catch (error) {
     next(error);
   }
@@ -187,11 +196,6 @@ const deleteTenant = async (request, response, next) => {
     }
 
     let DeletedTenant = await models.Tenant.destroy({ where: { id: request.params.id } });
-
-    console.log(DeletedTenant);
-    if (DeletedTenant === 0) {
-      throw new ErrorHandler(StatusCodes.INTERNAL_SERVER_ERROR, 'Something went wrong.');
-    }
 
     response.status(StatusCodes.OK).json({ message: 'Tenant deleted successfully', loading: false });
   } catch (error) {}

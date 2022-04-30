@@ -1,9 +1,10 @@
 const models = require('../../models');
 const { Op, where, fn, literal, col } = require('sequelize');
 const { TENANT_STATUS } = require('../../constants/tenant');
+const { checkFile, createFile } = require('../../utils/filesystem');
 require('dotenv').config();
 
-const listingRepository = request => {
+const tenantlistingRepository = request => {
   let like = new Object();
   let whereParam = new Object();
   const PAGE = ((request.query.page || 1) - 1) * parseInt(process.env.PAGE_SIZE);
@@ -20,9 +21,12 @@ const listingRepository = request => {
     }
 
     if (request.query.type === TENANT_STATUS.SLIP_DUE) {
-      whereParam[Op.and] = where(fn('timestampdiff', literal('day'), col('last_rent_slip'), literal('CURRENT_TIMESTAMP')), {
-        [Op.gte]: 30,
-      });
+      whereParam[Op.and] = where(
+        fn('timestampdiff', literal('day'), col('last_rent_slip'), literal('CURRENT_TIMESTAMP')),
+        {
+          [Op.gte]: 30,
+        },
+      );
     }
   }
 
@@ -32,14 +36,14 @@ const listingRepository = request => {
       'id',
       'name',
       'cnic',
-      'fathers_name',
-      'phone_number',
-      'guardian_phone_number',
+      'fathersName',
+      'phoneNumber',
+      'guardianPhoneNumber',
       'email',
       'residing',
-      'last_rent_slip',
-      'last_rent_paid',
-      'meta'
+      'lastRentSlip',
+      'lastRentPaid',
+      'meta',
     ],
     order: [['created_at', 'DESC']],
     offset: PAGE,
@@ -47,6 +51,70 @@ const listingRepository = request => {
   });
 };
 
+const getTenantByIdRepository = tenantid => {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      try {
+        let Tenant = await models.Tenant.findOne({
+          where: { id: tenantid },
+          attributes: [
+            'id',
+            'name',
+            'cnic',
+            'domicile',
+            'fathers_name',
+            'phone_number',
+            'guardian_phone_number',
+            'email',
+            'guardianEmail',
+            'residing',
+            'lastRentSlip',
+            'lastRentPaid',
+            'slipsCount',
+            'tenantImageFile',
+            'cnicImageFile',
+            'guardianCnicImageFile',
+            'tenantImage',
+            'cnicImage',
+            'guardianCnicImage',
+            'createdAt',
+            'updatedAt',
+            'meta',
+          ],
+          raw: true,
+          nest: true,
+        });
+
+        let tenantImagePath = `./media/images/${Tenant.tenantImageFile}`;
+        if (!checkFile(tenantImagePath)) {
+          createFile(tenantImagePath, String(Tenant.tenantImage), 'base64');
+        }
+
+        let cnicImagePath = `./media/images/${Tenant.cnicImageFile}`;
+        if (!checkFile(cnicImagePath)) {
+          createFile(cnicImagePath, String(Tenant.cnicImage), 'base64');
+        }
+
+        let guardianCnicPath = `./media/images/${Tenant.guardianCnicFile}`;
+        if (!checkFile(guardianCnicPath)) {
+          createFile(guardianCnicPath, String(Tenant.guardianCnic), 'base64');
+        }
+
+        let TenantToReturn = { ...Tenant };
+        delete TenantToReturn.tenantImage;
+        delete TenantToReturn.cnicImage;
+        delete TenantToReturn.guardianCnicImage;
+
+        resolve(TenantToReturn);
+        return TenantToReturn;
+      } catch (error) {
+        reject(error);
+      }
+    })();
+  });
+};
+
 module.exports = {
-  listingRepository,
+  tenantlistingRepository,
+  getTenantByIdRepository,
 };

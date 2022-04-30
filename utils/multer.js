@@ -41,7 +41,6 @@ function formData(directory = '', documentType) {
     },
     filename: (req, file, cb) => {
       const mimetype = Object.keys(MimeTypes).find(key => MimeTypes[key] === file.mimetype);
-      console.log(MimeTypesExtensions[MimeTypes[mimetype]]);
       cb(null, Date.now() + MimeTypesExtensions[MimeTypes[mimetype]]);
     },
   });
