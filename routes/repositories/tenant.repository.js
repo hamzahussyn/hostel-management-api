@@ -85,19 +85,25 @@ const getTenantByIdRepository = tenantid => {
           nest: true,
         });
 
-        let tenantImagePath = `./media/images/${Tenant.tenantImageFile}`;
-        if (!checkFile(tenantImagePath)) {
-          createFile(tenantImagePath, String(Tenant.tenantImage), 'base64');
+        if (Tenant.tenantImageFile) {
+          let tenantImagePath = `./media/images/${Tenant?.tenantImageFile}`;
+          if (!checkFile(tenantImagePath)) {
+            createFile(tenantImagePath, String(Tenant.tenantImage), 'base64');
+          }
         }
 
-        let cnicImagePath = `./media/images/${Tenant.cnicImageFile}`;
-        if (!checkFile(cnicImagePath)) {
-          createFile(cnicImagePath, String(Tenant.cnicImage), 'base64');
+        if (Tenant.cnicImageFile) {
+          let cnicImagePath = `./media/images/${Tenant.cnicImageFile}`;
+          if (!checkFile(cnicImagePath)) {
+            createFile(cnicImagePath, String(Tenant.cnicImage), 'base64');
+          }
         }
 
-        let guardianCnicPath = `./media/images/${Tenant.guardianCnicFile}`;
-        if (!checkFile(guardianCnicPath)) {
-          createFile(guardianCnicPath, String(Tenant.guardianCnic), 'base64');
+        if (Tenant.guardianCnicFile) {
+          let guardianCnicPath = `./media/images/${Tenant.guardianCnicFile}`;
+          if (!checkFile(guardianCnicPath)) {
+            createFile(guardianCnicPath, String(Tenant.guardianCnic), 'base64');
+          }
         }
 
         let TenantToReturn = { ...Tenant };
