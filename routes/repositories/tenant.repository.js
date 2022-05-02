@@ -106,7 +106,16 @@ const getTenantByIdRepository = tenantid => {
           }
         }
 
+        let Slip = await models.Slip.findOne({
+          where: { tenantId: tenantid },
+          order: [['createdAt', 'DESC']],
+          limit: 1,
+          raw: true
+        });
+
         let TenantToReturn = { ...Tenant };
+        TenantToReturn.Slip = Slip;
+
         delete TenantToReturn.tenantImage;
         delete TenantToReturn.cnicImage;
         delete TenantToReturn.guardianCnicImage;

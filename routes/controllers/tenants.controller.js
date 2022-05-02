@@ -7,6 +7,7 @@ const {
   uploadMediaSchema,
   getByIdSchema,
   deleteByIdSchema,
+  generateSlipSchema,
 } = require('../dtos/tenants.dtos');
 const {
   getTenantListing,
@@ -15,6 +16,7 @@ const {
   getTenantById,
   uploadMedia,
   deleteTenant,
+  generateSlip,
 } = require('../services/tenants.service');
 
 const router = require('express').Router();
@@ -24,6 +26,7 @@ router.get('/:id', [checkSchema(getByIdSchema)], getTenantById);
 router.post('/create', [checkSchema(addNewTenantSchema)], addNewTenant);
 router.patch('/:id/update', [checkSchema(updateTenantSchema)], updateTenant);
 router.delete('/:id/delete', [checkSchema(deleteByIdSchema)], deleteTenant);
+router.post('/:id/generate-slip', [checkSchema(generateSlipSchema)], generateSlip);
 router.post(
   '/:id/media-upload',
   [

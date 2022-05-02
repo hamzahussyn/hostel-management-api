@@ -12,10 +12,10 @@ const getTenantListingSchema = {
     optional: true,
   },
   page: {
-    in: ["query"],
+    in: ['query'],
     toInt: true,
-    errorMessage: "page is required in the query string."
-  }
+    errorMessage: 'page is required in the query string.',
+  },
 };
 
 const addNewTenantSchema = {
@@ -65,15 +65,15 @@ const addNewTenantSchema = {
     in: ['body'],
     isString: true,
     errorMessage: 'meta is a required Field',
-  }
+  },
 };
 
 const updateTenantSchema = {
   id: {
-    in: ["params"],
-    errorMessage: "Id in params is required.",
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
     customSanitizer: {
-      options: (value) => {
+      options: value => {
         let sanitizedValue;
         if (parseInt(value)) {
           sanitizedValue = parseInt(value);
@@ -88,66 +88,66 @@ const updateTenantSchema = {
     in: ['body'],
     isString: true,
     errorMessage: 'Name is a required Field',
-    optional: true
+    optional: true,
   },
   cnic: {
     in: ['body'],
     isString: true,
     errorMessage: 'cnic is a required Field',
-    optional: true
+    optional: true,
   },
   fathersName: {
     in: ['body'],
     isString: true,
     errorMessage: 'fathersName is a required Field',
-    optional: true
+    optional: true,
   },
   domicile: {
     in: ['body'],
     isString: true,
     errorMessage: 'domicile is a required Field',
-    optional: true
+    optional: true,
   },
   phoneNumber: {
     in: ['body'],
     isString: true,
     errorMessage: 'phoneNumber is a required Field',
-    optional: true
+    optional: true,
   },
   guardianPhoneNumber: {
     in: ['body'],
     isString: true,
     errorMessage: 'guardianPhoneNumber is a required Field',
-    optional: true
+    optional: true,
   },
   email: {
     in: ['body'],
     isString: true,
     isEmail: true,
     errorMessage: 'email is a required Field',
-    optional: true
+    optional: true,
   },
   guardianEmail: {
     in: ['body'],
     isString: true,
     isEmail: true,
     errorMessage: 'guardianEmail is a required Field',
-    optional: true
+    optional: true,
   },
   meta: {
     in: ['body'],
     isString: true,
     errorMessage: 'meta is a required Field',
-    optional: true
-  }
+    optional: true,
+  },
 };
 
 const uploadMediaSchema = {
   id: {
-    in: ["params"],
-    errorMessage: "Id in params is required.",
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
     customSanitizer: {
-      options: (value) => {
+      options: value => {
         let sanitizedValue;
         if (parseInt(value)) {
           sanitizedValue = parseInt(value);
@@ -158,14 +158,14 @@ const uploadMediaSchema = {
       },
     },
   },
-}
+};
 
 const getByIdSchema = {
   id: {
-    in: ["params"],
-    errorMessage: "Id in params is required.",
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
     customSanitizer: {
-      options: (value) => {
+      options: value => {
         let sanitizedValue;
         if (parseInt(value)) {
           sanitizedValue = parseInt(value);
@@ -176,14 +176,14 @@ const getByIdSchema = {
       },
     },
   },
-}
+};
 
 const deleteByIdSchema = {
   id: {
-    in: ["params"],
-    errorMessage: "Id in params is required.",
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
     customSanitizer: {
-      options: (value) => {
+      options: value => {
         let sanitizedValue;
         if (parseInt(value)) {
           sanitizedValue = parseInt(value);
@@ -194,7 +194,52 @@ const deleteByIdSchema = {
       },
     },
   },
-}
+};
+
+const generateSlipSchema = {
+  id: {
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
+    customSanitizer: {
+      options: value => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+  slipType: {
+    in: ['body'],
+    isString: true,
+    errorMessage: 'slip type is required'
+  },
+  rentOfMonth: {
+    in: ['body'],
+    isString: true,
+    errorMessage: 'rent of the month is required'
+  },
+  amount: {
+    in: ['body'],
+    isInt: true,
+    toInt: true,
+    optional: true
+  },
+  arrearsOrPenaltiesPaid: {
+    in: ['body'],
+    isInt: true,
+    toInt: true,
+    optional: true,
+  },
+  meta: {
+    in: ['body'],
+    isString: true,
+    optional: true
+  }
+};
 
 module.exports = {
   getTenantListingSchema,
@@ -202,5 +247,6 @@ module.exports = {
   updateTenantSchema,
   uploadMediaSchema,
   getByIdSchema,
-  deleteByIdSchema
+  deleteByIdSchema,
+  generateSlipSchema
 };

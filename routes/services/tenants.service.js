@@ -22,13 +22,13 @@ const getTenantById = async (request, response, next) => {
   try {
     validatePayload(request);
 
-    if(request.params.id === 0) {
-      throw new ErrorHandler(StatusCodes.BAD_REQUEST, "Malformed id in params.");
+    if (request.params.id === 0) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
     }
 
     let Tenant = await getTenantByIdRepository(request.params.id);
 
-    response.status(StatusCodes.OK).json({message: "tenant by id", data: Tenant, loading: false});
+    response.status(StatusCodes.OK).json({ message: 'tenant by id', data: Tenant, loading: false });
   } catch (error) {
     next(error);
   }
@@ -131,6 +131,14 @@ const updateTenant = async (request, response, next) => {
       updateBody.guardianEmail = body.guardianEmail;
     }
 
+    if(body.residing){
+      updateBody.residing = body.residing;
+    }
+
+    if(body.lastRentPaid){
+      updateBody.lastRentPaid = body.lastRentPaid;
+    }
+
     if (body.meta) {
       updateBody.meta = body.meta;
     }
@@ -198,7 +206,63 @@ const deleteTenant = async (request, response, next) => {
     let DeletedTenant = await models.Tenant.destroy({ where: { id: request.params.id } });
 
     response.status(StatusCodes.OK).json({ message: 'Tenant deleted successfully', loading: false });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
+};
+
+const generateSlip = async (request, response, next) => {
+  try {
+    validatePayload(request);
+
+    if (request.params.id === 0) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
+    }
+
+    let Tenant = await models.Tenant.findByPk(request.params.id);
+
+    if (!Tenant) {
+      throw new ErrorHandler(StatusCodes.NOT_FOUND, 'Tenant does not exist');
+    }
+
+    if (!Tenant.lastRentPaid) {
+      throw new ErrorHandler(StatusCodes.CONFLICT, 'Cannot generate new slip while old slip is due.');
+    }
+
+    let GeneratedSlip = await models.Slip.create({
+      tenantId: request.params.id,
+      slipType: request.body.slipType,
+      rentOfMonth: request.body.rentOfMonth,
+      amount: request.body.amount,
+      arrearsOrPenaltiesPaid: request.body.arrearsOrPenaltiesPaid,
+      meta: request.body.meta,
+    });
+
+    await models.Tenant.update(
+      {
+        slipsCount: Tenant.slipsCount + 1,
+        lastRentSlip: GeneratedSlip.createdAt,
+        lastRentPaid: false,
+      },
+      { where: { id: request.params.id } },
+    );
+
+    response.status(StatusCodes.CREATED).json({
+      data: {
+        id: GeneratedSlip.id,
+        tenantId: GeneratedSlip.tenantId,
+        slipType: GeneratedSlip.slipType,
+        rentOfMonth: GeneratedSlip.rentOfMonth,
+        amount: GeneratedSlip.amount,
+        arrearsOrPenaltiesPaid: GeneratedSlip.arrearsOrPenaltiesPaid,
+        meta: GeneratedSlip.meta,
+      },
+      message: `generated slip for tenantid: ${request.params.id}`,
+      loading: false,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
@@ -208,4 +272,5 @@ module.exports = {
   updateTenant,
   uploadMedia,
   deleteTenant,
+  generateSlip,
 };
