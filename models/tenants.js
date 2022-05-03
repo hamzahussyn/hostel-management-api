@@ -8,9 +8,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Slip}) {
+    static associate({ Slip }) {
       // define association here
-      this.hasMany(Slip, {foreignKey: 'tenantId'});
+      this.hasMany(Slip, { foreignKey: 'tenantId' });
     }
   }
   Tenant.init(
@@ -66,16 +66,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       tenantImageFile: {
-        allowNull: false,
-        type: DataTypes.STRING
+        allowNull: true,
+        type: DataTypes.STRING,
       },
       cnicImageFile: {
-        allowNull: false,
-        type: DataTypes.STRING
+        allowNull: true,
+        type: DataTypes.STRING,
       },
       guardianCnicImageFile: {
-        allowNull: false,
-        type: DataTypes.STRING
+        allowNull: true,
+        type: DataTypes.STRING,
       },
       tenantImage: {
         allowNull: true,
