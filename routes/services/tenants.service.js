@@ -131,11 +131,11 @@ const updateTenant = async (request, response, next) => {
       updateBody.guardianEmail = body.guardianEmail;
     }
 
-    if(body.residing){
+    if (body.residing) {
       updateBody.residing = body.residing;
     }
 
-    if(body.lastRentPaid){
+    if (body.lastRentPaid) {
       updateBody.lastRentPaid = body.lastRentPaid;
     }
 
@@ -225,7 +225,7 @@ const generateSlip = async (request, response, next) => {
       throw new ErrorHandler(StatusCodes.NOT_FOUND, 'Tenant does not exist');
     }
 
-    if (!Tenant.lastRentPaid) {
+    if (Tenant.lastRentSlip && !Tenant.lastRentPaid) {
       throw new ErrorHandler(StatusCodes.CONFLICT, 'Cannot generate new slip while old slip is due.');
     }
 
