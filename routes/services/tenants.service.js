@@ -225,9 +225,9 @@ const generateSlip = async (request, response, next) => {
       throw new ErrorHandler(StatusCodes.NOT_FOUND, 'Tenant does not exist');
     }
 
-    if (Tenant.lastRentSlip && !Tenant.lastRentPaid) {
-      throw new ErrorHandler(StatusCodes.CONFLICT, 'Cannot generate new slip while old slip is due.');
-    }
+    // if (Tenant.lastRentSlip && !Tenant.lastRentPaid) {
+    //   throw new ErrorHandler(StatusCodes.CONFLICT, 'Cannot generate new slip while old slip is due.');
+    // }
 
     let GeneratedSlip = await models.Slip.create({
       tenantId: request.params.id,
