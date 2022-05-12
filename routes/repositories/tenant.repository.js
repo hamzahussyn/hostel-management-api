@@ -16,7 +16,7 @@ const tenantlistingRepository = request => {
   if (request.query.type) {
     if (request.query.type === TENANT_STATUS.RENT_DUE) {
       whereParam[Op.and] = where(col('last_rent_paid'), {
-        [Op.or]: { [Op.eq]: 0, [Op.eq]: null },
+        [Op.or]: [{ [Op.eq]: false }, { [Op.eq]: null }],
       });
     }
 

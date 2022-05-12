@@ -11,7 +11,7 @@ const getSlipsListingRepository = (request) => {
   }
 
   return models.Slip.findAndCountAll({
-    include: { model: models.Tenant, where: { ...likeParamsTenant }, attributes: ['name', 'phoneNumber'] },
+    include: { model: models.Tenant, where: { ...likeParamsTenant }, attributes: ['id', 'name', 'phoneNumber'] },
     order: [['created_at', 'DESC']],
     offset: PAGE,
     limit: parseInt(process.env.PAGE_SIZE),
