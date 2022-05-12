@@ -93,6 +93,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      formScanImageFile: {
+        allowNull: false,
+        type: DataTypes.STRING
+      },
+      formScanImage: {
+        allowNull: true,
+        type: DataTypes.BLOB('long'),
+      },
     },
     {
       sequelize,

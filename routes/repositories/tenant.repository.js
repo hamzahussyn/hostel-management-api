@@ -102,7 +102,14 @@ const getTenantByIdRepository = tenantid => {
         if (Tenant.guardianCnicFile) {
           let guardianCnicPath = `./media/images/${Tenant.guardianCnicFile}`;
           if (!checkFile(guardianCnicPath)) {
-            createFile(guardianCnicPath, String(Tenant.guardianCnic), 'base64');
+            createFile(guardianCnicPath, String(Tenant.guardianCnicImage), 'base64');
+          }
+        }
+
+        if (Tenant.formScanFile) {
+          let formScanPath = `./media/images/${Tenant.formScanFile}`;
+          if (!checkFile(formScanPath)) {
+            createFile(formScanPath, String(Tenant.formScanImage), 'base64');
           }
         }
 

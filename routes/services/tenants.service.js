@@ -186,6 +186,14 @@ const uploadMedia = async (request, response, next) => {
       updateBody.guardianCnicImage = convertToBase64(filename);
     }
 
+    if (request.files.formScan) {
+      let { filename } = request.files.formScan[0];
+      compressImage(filename);
+
+      updateBody.formScanImageFile = filename;
+      updateBody.formScanImage = convertToBase64(filename);
+    }
+
     await models.Tenant.update({ ...updateBody }, { where: { id: parseInt(request.params.id) } });
     response
       .status(StatusCodes.CREATED)

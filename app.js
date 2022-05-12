@@ -9,6 +9,7 @@ const { handleError } = require('./helpers/errorHandler');
 const authController = require('./routes/controllers/auth.controller');
 const userController = require('./routes/controllers/user.controller');
 const tenantController = require('./routes/controllers/tenants.controller');
+const slipController = require('./routes/controllers/slips.controller');
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.get('/', (req, res) => res.status(200).json({ Message: 'hostel-management-ap
 app.use('/api/auth', authController);
 app.use('/api/users', userController);
 app.use('/api/tenants', tenantController);
+app.use('/api/slips', slipController);
 
 app.use((err, req, res, next) => handleError(err, res));
 

@@ -35,6 +35,7 @@ router.post(
       { name: 'tenant', maxCount: 1 },
       { name: 'nic', maxCount: 1 },
       { name: 'guardianCnic', maxCount: 1 },
+      { name: 'formScan', maxCount: 1 }
     ]),
   ],
   uploadMedia,
