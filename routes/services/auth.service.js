@@ -11,7 +11,7 @@ require('dotenv').config();
 
 const _register = async (req, res, next) => {
   try {
-    resolveSchemaValidationResult(req);
+    // resolveSchemaValidationResult(req);
 
     // check if email already exists
     const doesUserExist = await models.User.findOne({
@@ -87,7 +87,7 @@ const _register = async (req, res, next) => {
 
 const _login = async (req, res, next) => {
   try {
-    resolveSchemaValidationResult(req);
+    // resolveSchemaValidationResult(req);
 
     const user = await models.User.findOne({
       where: { email: req.body.email },

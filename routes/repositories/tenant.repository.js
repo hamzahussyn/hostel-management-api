@@ -40,6 +40,7 @@ const tenantlistingRepository = request => {
       'phoneNumber',
       'guardianPhoneNumber',
       'email',
+      'guardianEmail',
       'residing',
       'lastRentSlip',
       'lastRentPaid',
@@ -117,7 +118,7 @@ const getTenantByIdRepository = tenantid => {
           where: { tenantId: tenantid },
           order: [['createdAt', 'DESC']],
           limit: 1,
-          raw: true
+          raw: true,
         });
 
         let TenantToReturn = { ...Tenant };
