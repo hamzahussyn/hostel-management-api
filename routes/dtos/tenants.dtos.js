@@ -54,12 +54,14 @@ const addNewTenantSchema = {
     isString: true,
     isEmail: true,
     errorMessage: 'email is a required Field',
+    optional: true
   },
   guardianEmail: {
     in: ['body'],
     isString: true,
     isEmail: true,
     errorMessage: 'guardianEmail is a required Field',
+    optional: true
   },
   meta: {
     in: ['body'],
