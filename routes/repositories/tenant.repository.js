@@ -6,16 +6,16 @@ require('dotenv').config();
 
 const _selectTenantsOnSlipPaymentStatus = paymentStatus => {
   return `
-          SELECT 
-            slips.tenant_id
-          FROM 
-            slips, tenants
-          WHERE 
-            slips.tenant_id = tenants.id 
-            AND
-            slips.payment_status = ${paymentStatus}
-            AND
-            slips.deleted_at IS NULL
+    SELECT 
+      slips.tenant_id
+    FROM 
+      slips, tenants
+    WHERE 
+      slips.tenant_id = tenants.id 
+        AND
+      slips.payment_status = ${paymentStatus}
+        AND
+      slips.deleted_at IS NULL
   `
 }
 
@@ -158,6 +158,7 @@ const getTenantByIdRepository = tenantid => {
         delete TenantToReturn.tenantImage;
         delete TenantToReturn.cnicImage;
         delete TenantToReturn.guardianCnicImage;
+        delete TenantToReturn.formScanImage;
 
         resolve(TenantToReturn);
         return TenantToReturn;
