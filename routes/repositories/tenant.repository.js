@@ -4,6 +4,21 @@ const { TENANT_STATUS } = require('../../constants/tenant');
 const { checkFile, createFile } = require('../../utils/filesystem');
 require('dotenv').config();
 
+const _selectTenantsOnSlipPaymentStatus = paymentStatus => {
+  return `
+          SELECT 
+            slips.tenant_id
+          FROM 
+            slips, tenants
+          WHERE 
+            slips.tenant_id = tenants.id 
+            AND
+            slips.payment_status = ${paymentStatus}
+            AND
+            slips.deleted_at IS NULL
+  `
+}
+
 const tenantlistingRepository = request => {
   let like = new Object();
   let whereParam = new Object();
@@ -15,9 +30,23 @@ const tenantlistingRepository = request => {
 
   if (request.query.type) {
     if (request.query.type === TENANT_STATUS.RENT_DUE) {
-      whereParam[Op.and] = where(col('last_rent_paid'), {
-        [Op.or]: [{ [Op.eq]: false }, { [Op.eq]: null }],
-      });
+      whereParam[Op.and] = literal(`
+        id IN
+          (
+            ${_selectTenantsOnSlipPaymentStatus(false)}
+          ) 
+      `)
+    }
+
+    if (request.query.type === TENANT_STATUS.PAID) {
+      whereParam[Op.and] = literal(`
+        id IN
+          (
+            ${_selectTenantsOnSlipPaymentStatus(true)}
+            EXCEPT
+            ${_selectTenantsOnSlipPaymentStatus(false)}
+          ) 
+      `)
     }
 
     if (request.query.type === TENANT_STATUS.SLIP_DUE) {
