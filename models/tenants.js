@@ -94,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       formScanImageFile: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING
       },
       formScanImage: {
