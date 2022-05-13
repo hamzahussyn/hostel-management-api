@@ -40,11 +40,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       email: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
       },
       guardianEmail: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.STRING,
       },
       residing: {

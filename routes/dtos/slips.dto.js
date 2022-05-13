@@ -14,6 +14,68 @@ const getSlipsListingSchema = {
   },
 };
 
+const getSlipByIdSchema = {
+  id: {
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
+    customSanitizer: {
+      options: value => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+}
+
+const deleteSlipByIdSchema = {
+  id: {
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
+    customSanitizer: {
+      options: value => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+}
+
+const updatePaymentStatusSchema = {
+  id: {
+    in: ['params'],
+    errorMessage: 'Id in params is required.',
+    customSanitizer: {
+      options: value => {
+        let sanitizedValue;
+        if (parseInt(value)) {
+          sanitizedValue = parseInt(value);
+        } else {
+          sanitizedValue = 0;
+        }
+        return sanitizedValue;
+      },
+    },
+  },
+  paymentStatus: {
+    in: ['body'],
+    errorMessage: 'payment status is required',
+    isBoolean: true
+  }
+}
+
 module.exports = {
-  getSlipsListingSchema
+  getSlipsListingSchema,
+  getSlipByIdSchema,
+  deleteSlipByIdSchema,
+  updatePaymentStatusSchema
 }

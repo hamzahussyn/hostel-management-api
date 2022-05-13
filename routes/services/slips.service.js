@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const { validatePayload } = require('../../helpers/errorHandler');
+const { validatePayload, ErrorHandler } = require('../../helpers/errorHandler');
 const models = require('../../models');
 const { getSlipsListingRepository } = require('../repositories/slips.repository');
 
@@ -15,24 +15,55 @@ const getSlipsListing = async (req, res, next) => {
   }
 }
 
-const getSlipById = (req, res, next) => {
+const getSlipById = async (req, res, next) => {
   try {
+    validatePayload(req);
 
+    if (req.params.id == 0) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
+    }
+
+    let Slip = await models.Slip.findOne({ where: { id: req.params.id }, raw: true });
+
+    res.status(StatusCodes.OK).json({ data: Slip, message: 'Slip by id', loading: false })
   } catch (error) {
-
+    next(error);
   }
 }
 
-const deleteSlip = (req, res, next) => {
+const deleteSlip = async (req, res, next) => {
   try {
+    validatePayload(req);
 
+    if (req.params.id == 0) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
+    }
+
+    await models.Slip.destroy({ where: { id: req.params.id } });
+    res.status(StatusCodes.CREATED).json({ message: 'Slip deleted successfully.', loading: false });
   } catch (error) {
+    next(error);
+  }
+}
 
+const updatePaymentStatus = async (req, res, next) => {
+  try {
+    validatePayload(req);
+
+    if (req.params.id == 0) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
+    }
+
+    await models.Slip.update({ paymentStatus: req.body.paymentStatus }, { where: { id: req.params.id } });
+    res.status(StatusCodes.CREATED).json({ message: 'Payment status updated successfully', loading: false });
+  } catch (error) {
+    next(error);
   }
 }
 
 module.exports = {
   getSlipsListing,
   getSlipById,
-  deleteSlip
+  deleteSlip,
+  updatePaymentStatus
 }

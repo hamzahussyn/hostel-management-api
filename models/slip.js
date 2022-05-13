@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         type: DataTypes.STRING,
         defaultValue: "{building:'', floor: '', room: '', recievedFrom: '', occupation:''}",
+      },
+      paymentStatus: {
+        allowNull: true,
+        type: DataTypes.BOOLEAN
       }
     },
     {

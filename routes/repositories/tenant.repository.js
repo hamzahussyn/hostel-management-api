@@ -107,6 +107,8 @@ const getTenantByIdRepository = tenantid => {
             'tenantImage',
             'cnicImage',
             'guardianCnicImage',
+            'formScanImageFile',
+            'formScanImage',
             'createdAt',
             'updatedAt',
             'meta',

@@ -52,8 +52,8 @@ const addNewTenant = async (request, response, next) => {
       domicile: request.body.domicile,
       phoneNumber: request.body.phoneNumber,
       guardianPhoneNumber: request.body.guardianPhoneNumber,
-      email: request.body.email,
-      guardianEmail: request.body.guardianEmail,
+      email: request.body?.email || null,
+      guardianEmail: request.body?.guardianEmail || null,
       meta: request.body.meta,
       residing: true,
     });
