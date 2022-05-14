@@ -1,7 +1,7 @@
 'use strict';
 const { Model, DATE } = require('sequelize');
-const {SLIP_TYPES} = require('../constants/slip');
-const {MONTHS} = require('../constants/months');
+const { SLIP_TYPES } = require('../constants/slip');
+const { MONTHS } = require('../constants/months');
 
 module.exports = (sequelize, DataTypes) => {
   class Slip extends Model {
@@ -10,20 +10,20 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({Tenant}) {
+    static associate({ Tenant }) {
       // define association here
-      this.belongsTo(Tenant, {foreignKey: 'tenantId'});
+      this.belongsTo(Tenant, { foreignKey: 'tenantId' });
     }
   }
   Slip.init(
     {
       tenantId: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       slipType: {
         allowNull: false,
-        type: DataTypes.ENUM(SLIP_TYPES.RENT, SLIP_TYPES.ARREARS, SLIP_TYPES.DEPOSIT, SLIP_TYPES.OTHERS)
+        type: DataTypes.ENUM(SLIP_TYPES.RENT, SLIP_TYPES.ARREARS, SLIP_TYPES.DEPOSIT, SLIP_TYPES.OTHERS),
       },
       rentOfMonth: {
         allowNull: false,
@@ -40,15 +40,15 @@ module.exports = (sequelize, DataTypes) => {
           MONTHS.OCTOBER,
           MONTHS.NOVEMBER,
           MONTHS.DECEMBER,
-        )
+        ),
       },
       amount: {
         allowNull: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       arrearsOrPenaltiesPaid: {
         allowNull: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       meta: {
         allowNull: true,
@@ -57,8 +57,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       paymentStatus: {
         allowNull: true,
-        type: DataTypes.BOOLEAN
-      }
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
@@ -66,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       tableName: 'slips',
       paranoid: true,
-    }
-  )
+    },
+  );
   return Slip;
-}
+};
