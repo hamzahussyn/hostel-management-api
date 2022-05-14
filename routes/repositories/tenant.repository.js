@@ -19,6 +19,21 @@ const _selectTenantsOnSlipPaymentStatus = paymentStatus => {
   `
 }
 
+const _selectCountOfSlipsOnPaymentStatus = () => {
+  return `
+    SELECT 
+      COUNT(*) 
+    FROM 
+      slips AS Slip
+    WHERE 
+      Slip.tenant_id = Tenant.id 
+        AND 
+      Slip.payment_status = FALSE
+        AND
+      Slip.deleted_at IS NULL
+  `
+}
+
 const tenantlistingRepository = request => {
   let like = new Object();
   let whereParam = new Object();
@@ -61,20 +76,14 @@ const tenantlistingRepository = request => {
 
   return models.Tenant.findAndCountAll({
     where: { ...like, ...whereParam },
-    attributes: [
-      'id',
-      'name',
-      'cnic',
-      'fathersName',
-      'phoneNumber',
-      'guardianPhoneNumber',
-      'email',
-      'guardianEmail',
-      'residing',
-      'lastRentSlip',
-      'lastRentPaid',
-      'meta',
-    ],
+    attributes: {
+      include: [
+        [
+          literal(`(${_selectCountOfSlipsOnPaymentStatus()}) = 0`), 'paymentStatus'
+        ]
+      ],
+      exclude: ['formScanImage', 'cnicImage', 'tenantImage', 'guardianCnicImage'],
+    },
     order: [['created_at', 'DESC']],
     offset: PAGE,
     limit: parseInt(process.env.PAGE_SIZE),
