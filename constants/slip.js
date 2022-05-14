@@ -4,3 +4,8 @@ exports.SLIP_TYPES = {
   ARREARS: 'Arrears',
   OTHERS: 'Others'
 }
+
+exports.SLIP_STATUS = {
+  PAID: 'paid',
+  UNPAID: 'unpaid'
+}
