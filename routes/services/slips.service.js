@@ -25,7 +25,7 @@ const getSlipById = async (req, res, next) => {
 
     let Slip = await models.Slip.findOne({
       where: { id: req.params.id },
-      raw: true,
+      raw: false,
       include: { model: models.Tenant, attributes: ['id', 'name', 'phoneNumber'] },
     });
 
