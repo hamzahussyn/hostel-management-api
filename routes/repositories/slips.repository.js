@@ -8,7 +8,7 @@ const getSlipsListingRepository = (request) => {
   let likeParamsTenant = new Object();
   const PAGE = ((request.query.page || 1) - 1) * parseInt(process.env.PAGE_SIZE);
 
-  if (request.query.column == 'name' || request.query.column == 'phone') {
+  if (request.query.column == 'name' || request.query.column == 'phoneNumber') {
     likeParamsTenant[request.query.column] = { [Op.like]: '%' + request.query.search + '%' }
   }
 

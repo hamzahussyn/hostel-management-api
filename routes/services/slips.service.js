@@ -43,7 +43,18 @@ const deleteSlip = async (req, res, next) => {
       throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
     }
 
+    let Slip = await models.Slip.findOne({ where: { id: req.params.id } });
+
     await models.Slip.destroy({ where: { id: req.params.id } });
+
+    let LastSlip = await models.Slip.findOne({ where: { tenantId: Slip.tenantId }, order: [['id', 'DESC']] });
+
+    if (LastSlip) {
+      await models.Tenant.update({ lastRentSlip: LastSlip.createdAt }, { where: { id: LastSlip.tenantId } });
+    } else {
+      await models.Tenant.update({ lastRentSlip: null }, { where: { id: LastSlip.tenantId } });
+    }
+
     res.status(StatusCodes.CREATED).json({ message: 'Slip deleted successfully.', loading: false });
   } catch (error) {
     next(error);
