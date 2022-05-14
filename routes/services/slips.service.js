@@ -13,7 +13,7 @@ const getSlipsListing = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const getSlipById = async (req, res, next) => {
   try {
@@ -23,13 +23,17 @@ const getSlipById = async (req, res, next) => {
       throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Malformed id in params.');
     }
 
-    let Slip = await models.Slip.findOne({ where: { id: req.params.id }, raw: true });
+    let Slip = await models.Slip.findOne({
+      where: { id: req.params.id },
+      raw: true,
+      include: { model: models.Tenant, attributes: ['id', 'name', 'phoneNumber'] },
+    });
 
-    res.status(StatusCodes.OK).json({ data: Slip, message: 'Slip by id', loading: false })
+    res.status(StatusCodes.OK).json({ data: Slip, message: 'Slip by id', loading: false });
   } catch (error) {
     next(error);
   }
-}
+};
 
 const deleteSlip = async (req, res, next) => {
   try {
@@ -44,7 +48,7 @@ const deleteSlip = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 const updatePaymentStatus = async (req, res, next) => {
   try {
@@ -59,11 +63,11 @@ const updatePaymentStatus = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 module.exports = {
   getSlipsListing,
   getSlipById,
   deleteSlip,
-  updatePaymentStatus
-}
+  updatePaymentStatus,
+};
