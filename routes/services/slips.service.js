@@ -52,7 +52,7 @@ const deleteSlip = async (req, res, next) => {
     if (LastSlip) {
       await models.Tenant.update({ lastRentSlip: LastSlip.createdAt }, { where: { id: LastSlip.tenantId } });
     } else {
-      await models.Tenant.update({ lastRentSlip: null }, { where: { id: LastSlip.tenantId } });
+      await models.Tenant.update({ lastRentSlip: null }, { where: { id: Slip.tenantId } });
     }
 
     res.status(StatusCodes.CREATED).json({ message: 'Slip deleted successfully.', loading: false });
