@@ -54,14 +54,14 @@ const addNewTenantSchema = {
     isString: true,
     isEmail: true,
     errorMessage: 'email is a required Field',
-    optional: true
+    optional: true,
   },
   guardianEmail: {
     in: ['body'],
     isString: true,
     isEmail: true,
     errorMessage: 'guardianEmail is a required Field',
-    optional: true
+    optional: true,
   },
   meta: {
     in: ['body'],
@@ -131,6 +131,11 @@ const updateTenantSchema = {
   meta: {
     in: ['body'],
     isString: true,
+    optional: true,
+  },
+  residing: {
+    in: ['body'],
+    isBoolean: true,
     optional: true,
   },
 };
@@ -208,18 +213,18 @@ const generateSlipSchema = {
   slipType: {
     in: ['body'],
     isString: true,
-    errorMessage: 'slip type is required'
+    errorMessage: 'slip type is required',
   },
   rentOfMonth: {
     in: ['body'],
     isString: true,
-    errorMessage: 'rent of the month is required'
+    errorMessage: 'rent of the month is required',
   },
   amount: {
     in: ['body'],
     isInt: true,
     toInt: true,
-    optional: true
+    optional: true,
   },
   arrearsOrPenaltiesPaid: {
     in: ['body'],
@@ -230,8 +235,8 @@ const generateSlipSchema = {
   meta: {
     in: ['body'],
     isString: true,
-    optional: true
-  }
+    optional: true,
+  },
 };
 
 module.exports = {
@@ -241,5 +246,5 @@ module.exports = {
   uploadMediaSchema,
   getByIdSchema,
   deleteByIdSchema,
-  generateSlipSchema
+  generateSlipSchema,
 };

@@ -131,7 +131,7 @@ const updateTenant = async (request, response, next) => {
       updateBody.guardianEmail = body.guardianEmail;
     }
 
-    if (body.residing) {
+    if (body.residing != null) {
       updateBody.residing = body.residing;
     }
 

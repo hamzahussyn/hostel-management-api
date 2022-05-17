@@ -20,11 +20,11 @@ module.exports = {
       },
       tenant_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       slip_type: {
         allowNull: false,
-        type: Sequelize.ENUM(SLIP_TYPES.RENT, SLIP_TYPES.ARREARS, SLIP_TYPES.DEPOSIT, SLIP_TYPES.OTHERS),
+        type: Sequelize.STRING,
       },
       rent_of_month: {
         allowNull: false,
@@ -78,6 +78,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('slips')
+    await queryInterface.dropTable('slips');
   },
 };

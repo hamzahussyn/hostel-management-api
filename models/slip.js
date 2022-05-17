@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       slipType: {
         allowNull: false,
-        type: DataTypes.ENUM(SLIP_TYPES.RENT, SLIP_TYPES.ARREARS, SLIP_TYPES.DEPOSIT, SLIP_TYPES.OTHERS),
+        // type: DataTypes.ENUM(SLIP_TYPES.RENT, SLIP_TYPES.ARREARS, SLIP_TYPES.DEPOSIT, SLIP_TYPES.OTHERS),
+        type: DataTypes.STRING,
       },
       rentOfMonth: {
         allowNull: false,
