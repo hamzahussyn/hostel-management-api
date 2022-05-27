@@ -1,6 +1,6 @@
-"use strict";
-const { Model } = require("sequelize");
-const { generateSalt, generateSecuredHash } = require("../helpers/security");
+'use strict';
+const { Model } = require('sequelize');
+const { generateSalt, generateSecuredHash } = require('../helpers/security');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -29,26 +29,26 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM("Admin", "Guest"),
+        type: DataTypes.ENUM('Admin', 'Guest'),
         allowNull: true,
-        defaultValue: "Guest",
+        defaultValue: 'Guest',
       },
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: 'User',
       underscored: true,
-      tableName: "users",
+      tableName: 'users',
 
       hooks: {
         beforeValidate: (user, options) => {
-          if (user.changed("password")) {
+          if (user.changed('password')) {
             user.salt = generateSalt();
             user.password = generateSecuredHash(user.password, user.salt);
           }
         },
       },
-    }
+    },
   );
 
   return User;

@@ -9,5 +9,6 @@ const models = require('./models');
 
 //models.Tenant.findOne({where: {id: 2}, include:[{model: models.Slip}], raw: true, nest: true}).then((res => console.log(res)));
 
-models.Slip.findOne({where: {id: 4}, include:[{model: models.Tenant}], raw: true, nest: true}).then(res => console.log(res));
-
+models.Slip.findOne({ where: { id: 4 }, include: [{ model: models.Tenant }], raw: true, nest: true }).then(res =>
+  console.log(res),
+);
