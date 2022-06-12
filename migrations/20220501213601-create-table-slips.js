@@ -53,7 +53,7 @@ module.exports = {
       },
       meta: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         default: "{building:'', floor: '', room: '', recievedFrom: '', occupation:''}",
       },
       created_at: {

@@ -16,8 +16,8 @@ const _selectTenantsOnSlipPaymentStatus = paymentStatus => {
       slips.payment_status = ${paymentStatus}
         AND
       slips.deleted_at IS NULL
-  `
-}
+  `;
+};
 
 const _selectCountOfSlipsOnPaymentStatus = () => {
   return `
@@ -31,8 +31,8 @@ const _selectCountOfSlipsOnPaymentStatus = () => {
       Slip.payment_status = FALSE
         AND
       Slip.deleted_at IS NULL
-  `
-}
+  `;
+};
 
 const tenantlistingRepository = request => {
   let like = new Object();
@@ -50,7 +50,7 @@ const tenantlistingRepository = request => {
           (
             ${_selectTenantsOnSlipPaymentStatus(false)}
           ) 
-      `)
+      `);
     }
 
     if (request.query.type === TENANT_STATUS.PAID) {
@@ -61,7 +61,7 @@ const tenantlistingRepository = request => {
             EXCEPT
             ${_selectTenantsOnSlipPaymentStatus(false)}
           ) 
-      `)
+      `);
     }
 
     if (request.query.type === TENANT_STATUS.SLIP_DUE) {
@@ -77,11 +77,7 @@ const tenantlistingRepository = request => {
   return models.Tenant.findAndCountAll({
     where: { ...like, ...whereParam },
     attributes: {
-      include: [
-        [
-          literal(`(${_selectCountOfSlipsOnPaymentStatus()}) = 0`), 'paymentStatus'
-        ]
-      ],
+      include: [[literal(`(${_selectCountOfSlipsOnPaymentStatus()}) = 0`), 'paymentStatus']],
       exclude: ['formScanImage', 'cnicImage', 'tenantImage', 'guardianCnicImage'],
     },
     order: [['created_at', 'DESC']],

@@ -16,23 +16,6 @@ const _getUserListing = async (req, res, next) => {
   }
 };
 
-// const _updateUserPassword = async (req, res, next) => {
-//   try {
-//     // authorizedUser(req, USER_ROLES.ADMIN);
-//     const user = await models.User.findOne({ where: { email: req.body.email } });
-//     var updateBody = {
-//       password: req.body.password,
-//     };
-
-//     await models.User.update({ ...user.dataValues, ...updateBody }, { where: { id: user.id } });
-
-//     res.status(StatusCodes.OK).json({ message: 'User password updated successfully', loading: false });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 module.exports = {
   GetUserListing: _getUserListing,
-  // UpdateUserPassword: _updateUserPassword,
 };
