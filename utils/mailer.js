@@ -1,7 +1,7 @@
-const nodemailer = require("nodemailer");
-const { Config } = require("../nodemailerConfig");
+const nodemailer = require('nodemailer');
+const { Config } = require('../nodemailerConfig');
 
-function sendEmail(emailDetailsConfig) {
+async function sendEmail(emailDetailsConfig) {
   let mailTransporter = nodemailer.createTransport({
     service: Config.SENDER_EMAIL_SERVICE,
     auth: {
@@ -19,9 +19,11 @@ function sendEmail(emailDetailsConfig) {
 
   mailTransporter.sendMail(mailDetails, function (err, data) {
     if (err) {
-      console.log("Failed to sent email.");
+      console.log('Failed to sent email.', err);
+      return Promise.reject(err);
     } else {
-      console.log("Email sent successfully");
+      console.log('Email sent successfully', data);
+      return Promise.resolve(data);
     }
   });
 }

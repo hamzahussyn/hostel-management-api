@@ -6,7 +6,11 @@ const { ErrorHandler, resolveSchemaValidationResult } = require('../../helpers/e
 const { createRefreshToken, createToken } = require('../../helpers/token');
 const { checkHash } = require('../../helpers/security');
 const { authorizedUser } = require('../../helpers/authorization');
+const { sendEmail } = require('../../utils/mailer');
 const { USER_ROLES } = require('../../constants/userRoles');
+const { EMAIL_FIELDS } = require('../../constants/resetPassword');
+const { Op } = require('sequelize');
+
 require('dotenv').config();
 
 const _register = async (req, res, next) => {
@@ -241,9 +245,40 @@ const _me = async (req, res, next) => {
   }
 };
 
+const _verifyToken = async (req, res, next, isHelperFunction = false) => {
+  try {
+    var userData;
+    jwt.verify(req.headers.token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        throw new ErrorHandler(StatusCodes.FORBIDDEN, 'Invalid or expired link. Please try again.');
+      }
+      userData = decoded;
+    });
+
+    const otpFound = await models.VerificationTokens.findOne({
+      where: {
+        email: userData.email,
+        token: req.headers.token,
+        is_redeemed: false,
+      },
+    });
+
+    if (!otpFound) {
+      throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Link has expired. Please try again.');
+    }
+
+    await models.VerificationTokens.update({ is_redeemed: true }, { where: { token: req.headers.token } });
+    if (isHelperFunction) return Promise.resolve(true);
+    res.status(StatusCodes.OK).json({ message: 'Link verified', loading: false });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const _updateUserPassword = async (req, res, next) => {
   try {
     // authorizedUser(req, USER_ROLES.ADMIN);
+    await _verifyToken(req, res, next, true);
     const user = await models.User.findOne({ where: { email: req.body.email } });
     var updateBody = {
       password: req.body.password,
@@ -257,10 +292,57 @@ const _updateUserPassword = async (req, res, next) => {
   }
 };
 
+const _generateAndMailOneTimeLink = async (req, res, next) => {
+  // console.log(req.headers.referer);
+  try {
+    const user = await models.User.findOne({ where: { email: req.query.email } });
+    console.log(user);
+    if (!user) throw new ErrorHandler(StatusCodes.NOT_FOUND, 'Incorrect email. No user found.');
+
+    var payload = { id: user.id, email: user.email };
+    const OTP = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: '10m',
+    });
+    await models.VerificationTokens.update(
+      { is_redeemed: true },
+      {
+        where: {
+          email: req.query.email,
+          token: {
+            [Op.ne]: OTP,
+          },
+        },
+      },
+    );
+    const otpSaved = await models.VerificationTokens.create({
+      email: req.query.email,
+      token: OTP,
+      is_redeemed: false,
+      expires_at: new Date().setMinutes(new Date().getMinutes() + 10),
+    });
+
+    if (otpSaved) {
+      var link = `${req.headers.referer}/account/forgot-password/?token=` + OTP;
+      sendEmail({
+        to: req.query.email,
+        subject: EMAIL_FIELDS.subject,
+        text: EMAIL_FIELDS.text.replace('$', link),
+        html: EMAIL_FIELDS.html.replace('$', link),
+      }).then(() => {
+        res.status(StatusCodes.OK).json({ message: 'Reset link has been sent to your email', loading: false });
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   RegisterAuthService: _register,
   LoginAuthService: _login,
   RefreshTokenAuthService: _refresh,
   MeAuthService: _me,
+  GenerateOneTimeLinkService: _generateAndMailOneTimeLink,
+  VerifyLinkService: _verifyToken,
   UpdatePasswordService: _updateUserPassword,
 };
